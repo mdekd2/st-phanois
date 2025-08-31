@@ -1,7 +1,7 @@
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged,
   User as FirebaseUser
 } from 'firebase/auth'
@@ -23,15 +23,12 @@ export const signUp = async (email: string, password: string, userData: Omit<Use
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
 
-    // Save additional user data to Firestore
     const userDoc = {
       ...userData,
       createdAt: new Date(),
       updatedAt: new Date()
     }
-
     await setDoc(doc(db, 'users', user.uid), userDoc)
-
     return { user, userData: userDoc }
   } catch (error: any) {
     throw new Error(getErrorMessage(error.code))
@@ -43,11 +40,8 @@ export const signIn = async (email: string, password: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
-
-    // Get user data from Firestore
     const userDoc = await getDoc(doc(db, 'users', user.uid))
     const userData = userDoc.data() as UserData
-
     return { user, userData }
   } catch (error: any) {
     throw new Error(getErrorMessage(error.code))
@@ -83,7 +77,7 @@ export const updateUserData = async (uid: string, userData: Partial<UserData>) =
     const updateData = {
       ...userData,
       updatedAt: new Date()
-  }
+    }
     await updateDoc(doc(db, 'users', uid), updateData)
   } catch (error: any) {
     throw new Error('Erreur lors de la mise à jour des données')
@@ -95,24 +89,34 @@ export const onAuthStateChange = (callback: (user: FirebaseUser | null) => void)
   return onAuthStateChanged(auth, callback)
 }
 
-// Error message helper
+// Error message helper with more detailed messages
 const getErrorMessage = (errorCode: string): string => {
   switch (errorCode) {
     case 'auth/email-already-in-use':
-      return 'Cette adresse email est déjà utilisée'
+      return 'Cette adresse email est déjà utilisée. Veuillez utiliser une autre adresse email ou vous connecter avec votre compte existant.'
     case 'auth/invalid-email':
-      return 'Adresse email invalide'
+      return 'Adresse email invalide. Veuillez vérifier le format de votre adresse email.'
     case 'auth/operation-not-allowed':
-      return 'L\'authentification par email/mot de passe n\'est pas activée'
+      return 'L\'authentification par email/mot de passe n\'est pas activée. Veuillez contacter l\'administrateur du site.'
     case 'auth/weak-password':
-      return 'Le mot de passe est trop faible'
+      return 'Le mot de passe est trop faible. Il doit contenir au moins 6 caractères.'
     case 'auth/user-disabled':
-      return 'Ce compte a été désactivé'
+      return 'Ce compte a été désactivé. Veuillez contacter l\'administrateur du site.'
     case 'auth/user-not-found':
-      return 'Aucun compte trouvé avec cette adresse email'
+      return 'Aucun compte trouvé avec cette adresse email. Veuillez vérifier votre adresse email ou créer un nouveau compte.'
     case 'auth/wrong-password':
-      return 'Mot de passe incorrect'
+      return 'Mot de passe incorrect. Veuillez vérifier votre mot de passe et réessayer.'
+    case 'auth/too-many-requests':
+      return 'Trop de tentatives de connexion. Veuillez attendre quelques minutes avant de réessayer.'
+    case 'auth/network-request-failed':
+      return 'Erreur de connexion réseau. Veuillez vérifier votre connexion internet et réessayer.'
+    case 'auth/invalid-credential':
+      return 'Identifiants invalides. Veuillez vérifier votre email et mot de passe.'
+    case 'auth/account-exists-with-different-credential':
+      return 'Un compte existe déjà avec cette adresse email mais avec une méthode de connexion différente.'
+    case 'auth/requires-recent-login':
+      return 'Cette opération nécessite une connexion récente. Veuillez vous reconnecter.'
     default:
-      return 'Une erreur est survenue lors de l\'authentification'
+      return 'Une erreur inattendue s\'est produite. Veuillez réessayer ou contacter le support.'
   }
 }
