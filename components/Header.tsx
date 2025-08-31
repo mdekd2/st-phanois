@@ -72,25 +72,25 @@ export default function Header() {
           </div>
 
           {/* Right section: Icons */}
-          <div className="flex items-center space-x-2 lg:space-x-4">
+          <div className="flex items-center space-x-3 lg:space-x-4">
             {/* Search - Hidden on mobile (will be in mobile menu) */}
-            <button className="hidden lg:block text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200">
-              <Search size={24} />
+            <button className="hidden lg:flex items-center justify-center w-10 h-10 text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200">
+              <Search size={20} />
             </button>
             
             {/* Wishlist - Hidden on mobile (will be in mobile menu) */}
-            <Link href="/wishlist" className="hidden lg:block text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200">
-              <Heart size={24} />
+            <Link href="/wishlist" className="hidden lg:flex items-center justify-center w-10 h-10 text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200">
+              <Heart size={20} />
             </Link>
             
             {/* Account - Hidden on mobile (will be in mobile menu) */}
-            <Link href="/account" className="hidden lg:block text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200">
-              <User size={24} />
+            <Link href="/account" className="hidden lg:flex items-center justify-center w-10 h-10 text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200">
+              <User size={20} />
             </Link>
             
             {/* Cart - Always visible */}
-            <Link href="/cart" className="text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200 relative p-2">
-              <ShoppingBag size={20} className="lg:w-6 lg:h-6" />
+            <Link href="/cart" className="flex items-center justify-center w-10 h-10 text-stephanois-black hover:text-stephanois-burgundy transition-colors duration-200 relative">
+              <ShoppingBag size={20} />
               {cartItemsCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-stephanois-burgundy text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                   {cartItemsCount}
